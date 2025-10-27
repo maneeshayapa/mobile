@@ -34,4 +34,4 @@ How to Run
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/maneeshayapa/mobile.git
+git clone [https://github.com/maneeshayapa/mobile.git](https://github.com/maneeshayapa/mobile)
