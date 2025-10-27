@@ -1,13 +1,16 @@
 package com.example.project6
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color // 1. IMPORT THIS
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -15,45 +18,40 @@ fun CreateTaskScreen(
     onSaveTask: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    var taskName by remember { mutableStateOf("") }
+    var taskText by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Create New Task") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = taskName,
-                onValueChange = { taskName = it },
-                label = { Text("Enter new task") },
-                modifier = Modifier.fillMaxWidth()
-            )
+    // 2. THIS IS THE FIX: Make the main layout transparent
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent) // Make background see-through
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Add a New Task", fontSize = 24.sp)
+        Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+        OutlinedTextField(
+            value = taskText,
+            onValueChange = { taskText = it },
+            label = { Text("Enter task description") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
+        Row {
+            Button(onClick = onBackClick) {
+                Text("Back")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    if (taskName.isNotBlank()) {
-                        onSaveTask(taskName.trim())
-                        taskName = ""
+                    if (taskText.isNotBlank()) {
+                        onSaveTask(taskText)
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                enabled = taskText.isNotBlank()
             ) {
                 Text("Save Task")
             }

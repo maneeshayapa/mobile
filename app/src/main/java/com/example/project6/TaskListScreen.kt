@@ -1,5 +1,6 @@
 package com.example.project6
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -16,7 +18,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TaskListScreen(
     tasks: List<String>,
-    onAddTaskClick: () -> Unit
+    onAddTaskClick: () -> Unit,
+    onTaskClick: (String) -> Unit // NEW: Add a callback for task clicks
 ) {
     Scaffold(
         topBar = {
@@ -28,7 +31,8 @@ fun TaskListScreen(
             FloatingActionButton(onClick = onAddTaskClick) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Task")
             }
-        }
+        },
+        containerColor = Color.Transparent
     ) { padding ->
         if (tasks.isEmpty()) {
             Box(
@@ -44,16 +48,20 @@ fun TaskListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 items(tasks) { task ->
                     Text(
                         text = "• $task",
                         fontSize = 20.sp,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onTaskClick(task) } // NEW: Make the text clickable
+                            .padding(vertical = 12.dp) // Increased padding for easier clicking
                     )
                 }
             }
         }
     }
 }
+
